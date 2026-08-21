@@ -2,9 +2,8 @@
 // import reactLogo from './assets/react.svg'
 // import viteLogo from './assets/vite.svg'
 // import heroImg from './assets/hero.png'
-import headshot from './assets/UWFEFaceshot.jpg'
-import waterlooLogo from './assets/waterlooLogo.png'
 import Header from './sections/Header.tsx'
+import Hero from './sections/Hero.tsx'
 import './App.css'
 
 function App() {
@@ -12,6 +11,7 @@ function App() {
   return (
     <div>
       <Header />
+        <Hero />
     </div>
   )
   // const [count, setCount] = useState(0)

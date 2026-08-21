@@ -1,0 +1,58 @@
+.hero {
+    width: min(calc(100% - 2rem), 1200px);
+
+    margin-inline: auto;
+
+    padding-block: 4rem;
+
+    scroll-margin-top: 5rem;
+}
+
+/*------------------Banner Title-----------------*/
+.hero__title {
+    margin: 0;
+    margin-bottom: 3rem;
+    text-align: center;
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1.1;
+}
+
+.hero__content {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 0.8fr)
+        minmax(0, 1.2fr)
+        minmax(0, 1.5fr);
+    align-items: center;
+    gap: 1rem;
+}
+
+.hero__images {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 0;
+}
+
+.hero__images img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.hero__headshot {
+    display: block;
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+    margin-inline: auto;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 1rem;
+}
+
+.hero__waterlooLogo {
+    max-width: 100%;
+    margin-inline: auto;
+    object-fit: contain;
+}
