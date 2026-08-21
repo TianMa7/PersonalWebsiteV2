@@ -1,5 +1,6 @@
-import headshot from '../assets/UWFEFaceshot.jpg'
-import waterlooLogo from '../assets/waterlooLogo.png'
+import headshot from '../assets/UWFEFaceshot.jpg';
+import waterlooLogo from '../assets/waterlooLogo.png';
+import RadarChart from '../components/RadarChart.tsx';
 import "./Hero.css";
 
 function Hero() {
@@ -14,7 +15,7 @@ function Hero() {
               </div>
 
               <div className="hero__stats">
-                  <h1 className="hero__stats__title">This section has</h1>
+                  <RadarChart />
               </div>
 
               <div className="hero__description">

@@ -1,0 +1,24 @@
+.radar-chart {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+}
+
+.radar-chart__canvas {
+    /*
+     * Chart.js uses the size of this container because
+     * maintainAspectRatio is disabled.
+     */
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    height: 340px;
+    margin-inline: auto;
+}
+
+@media (max-width: 650px) {
+.radar-chart__canvas {
+    max-width: 330px;
+    height: 300px;
+}
+}
