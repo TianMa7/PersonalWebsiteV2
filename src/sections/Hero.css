@@ -20,9 +20,9 @@
 .hero__content {
     display: grid;
     grid-template-columns:
-        minmax(0, 0.8fr)
-        minmax(0, 1.7fr)
-        minmax(0, 1.1fr);
+        minmax(0, 0.7fr)
+        minmax(0, 2fr)
+        minmax(0, 1fr);
     align-items: center;
     gap: 1rem;
 }
