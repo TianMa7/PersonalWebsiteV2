@@ -1,5 +1,6 @@
 import headshot from '../assets/UWFEFaceshot.jpg';
-import waterlooLogo from '../assets/waterlooLogo.png';
+import waterlooLogoLight from '../assets/WaterlooLogoLight.webp';
+import waterlooLogoReversed from '../assets/WaterlooLogoReversed.webp';
 import RadarChart from '../components/RadarChart.tsx';
 import "./Hero.css";
 
@@ -11,16 +12,26 @@ function Hero() {
           <div className="hero__content">
               <div className="hero__images">
                 <img className="hero__headshot" src={headshot} alt="Tian's image"/>
-                  <img className="hero__waterlooLogo" src={waterlooLogo} alt="Waterloo Logo"/>
-              </div>
-
-              <div className="hero__stats">
-                  <RadarChart />
+                <picture className="hero__logo">
+                  <source
+                    media="(prefers-color-scheme: dark)"
+                    srcSet={waterlooLogoReversed}
+                  />
+                  <img
+                    className="hero__waterlooLogo"
+                    src={waterlooLogoLight}
+                    alt="University of Waterloo"
+                  />
+                </picture>
               </div>
 
               <div className="hero__description">
                   <h2>Tian Ma</h2>
                   <p>This is a description of my character. make it breif!</p>
+              </div>
+
+              <div className="hero__stats">
+                  <RadarChart />
               </div>
           </div>
       </section>

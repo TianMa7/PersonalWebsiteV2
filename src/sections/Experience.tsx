@@ -11,9 +11,6 @@ import './Experience.css';
 
 type Side = 'projects' | 'work';
 type RailState = 'start' | 'through' | 'end';
-type Slot =
-    | { kind: 'term'; index: number }
-    | { kind: 'bridge'; afterIndex: number };
 
 interface Branch {
     entry: ProjectEntry | WorkEntry;
@@ -21,11 +18,16 @@ interface Branch {
     startIndex: number;
     endIndex: number;
     ongoing: boolean;
-    slot: Slot;
+    slotIndex: number;
 }
 
-interface RowBase {
+interface TermRow {
     key: string;
+    term: Term;
+    index: number;
+    isFirst: boolean;
+    isLast: boolean;
+    isCurrent: boolean;
     projects: ProjectEntry[];
     work: WorkEntry[];
     projectBranch: Branch | null;
@@ -33,24 +35,7 @@ interface RowBase {
     projectState: RailState | null;
     workState: RailState | null;
     hasEnd: boolean;
-    hasStart: boolean;
 }
-
-interface TermRow extends RowBase {
-    kind: 'term';
-    term: Term;
-    index: number;
-    isFirst: boolean;
-    isLast: boolean;
-    isCurrent: boolean;
-}
-
-interface BridgeRow extends RowBase {
-    kind: 'bridge';
-    afterIndex: number;
-}
-
-type Row = TermRow | BridgeRow;
 
 const LAST_TERM_INDEX = TERMS.length - 1;
 const LAST_TERM = TERMS[LAST_TERM_INDEX];
@@ -83,12 +68,11 @@ function makeBranch(entry: ProjectEntry | WorkEntry, side: Side): Branch {
     );
     const ongoing = entry.endTerm === undefined;
     const span = endIndex - startIndex;
-    const slot: Slot =
-        span > 0 && span % 2 === 1
-            ? { kind: 'bridge', afterIndex: startIndex + Math.floor(span / 2) }
-            : { kind: 'term', index: startIndex + span / 2 };
+    // Cards live in a real term row; the measurement pass moves each entry to
+    // the vertical midpoint of its branch, including half-row odd spans.
+    const slotIndex = startIndex + Math.floor(span / 2);
 
-    return { entry, side, startIndex, endIndex, ongoing, slot };
+    return { entry, side, startIndex, endIndex, ongoing, slotIndex };
 }
 
 const projectBranches = PROJECTS.map((entry) => makeBranch(entry, 'projects'));
@@ -131,26 +115,18 @@ function pushToMap<T>(map: Map<number, T[]>, key: number, value: T) {
 }
 
 const projectTermCards = new Map<number, ProjectEntry[]>();
-const projectBridgeCards = new Map<number, ProjectEntry[]>();
 const workTermCards = new Map<number, WorkEntry[]>();
-const workBridgeCards = new Map<number, WorkEntry[]>();
 
 for (const branch of projectBranches) {
-    const entry = branch.entry as ProjectEntry;
-    if (branch.slot.kind === 'term') {
-        pushToMap(projectTermCards, branch.slot.index, entry);
-    } else {
-        pushToMap(projectBridgeCards, branch.slot.afterIndex, entry);
-    }
+    pushToMap(
+        projectTermCards,
+        branch.slotIndex,
+        branch.entry as ProjectEntry,
+    );
 }
 
 for (const branch of workBranches) {
-    const entry = branch.entry as WorkEntry;
-    if (branch.slot.kind === 'term') {
-        pushToMap(workTermCards, branch.slot.index, entry);
-    } else {
-        pushToMap(workBridgeCards, branch.slot.afterIndex, entry);
-    }
+    pushToMap(workTermCards, branch.slotIndex, branch.entry as WorkEntry);
 }
 
 function stateForTerm(branch: Branch, index: number): RailState {
@@ -163,7 +139,7 @@ function stateForTerm(branch: Branch, index: number): RailState {
     return 'through';
 }
 
-const rows: Row[] = [];
+const rows: TermRow[] = [];
 
 for (let index = 0; index < TERMS.length; index += 1) {
     const term = TERMS[index];
@@ -181,7 +157,6 @@ for (let index = 0; index < TERMS.length; index += 1) {
     const workState = workBranch ? stateForTerm(workBranch, index) : null;
 
     rows.push({
-        kind: 'term',
         key: `term-${term}`,
         term,
         index,
@@ -195,38 +170,7 @@ for (let index = 0; index < TERMS.length; index += 1) {
         projectState,
         workState,
         hasEnd: projectState === 'end' || workState === 'end',
-        hasStart: projectState === 'start' || workState === 'start',
     });
-
-    const projectCards = projectBridgeCards.get(index) ?? [];
-    const workCards = workBridgeCards.get(index) ?? [];
-
-    if (projectCards.length > 0 || workCards.length > 0) {
-        const projectBridgeBranch =
-            projectBranches.find(
-                (branch) =>
-                    index >= branch.startIndex && index < branch.endIndex,
-            ) ?? null;
-        const workBridgeBranch =
-            workBranches.find(
-                (branch) =>
-                    index >= branch.startIndex && index < branch.endIndex,
-            ) ?? null;
-
-        rows.push({
-            kind: 'bridge',
-            key: `bridge-${index}`,
-            afterIndex: index,
-            projects: projectCards,
-            work: workCards,
-            projectBranch: projectBridgeBranch,
-            workBranch: workBridgeBranch,
-            projectState: projectBridgeBranch ? 'through' : null,
-            workState: workBridgeBranch ? 'through' : null,
-            hasEnd: false,
-            hasStart: false,
-        });
-    }
 }
 
 const ARM_PATHS: Record<Side, Record<'start' | 'end', string>> = {
@@ -588,18 +532,9 @@ function Experience() {
             aria-labelledby="experience-heading"
         >
             <div className="experience__header">
-                <p className="experience__eyebrow">
-                    <span className="prompt">$</span> git log --graph
-                    --oneline
-                </p>
                 <h2 className="experience__title" id="experience-heading">
                     Experience
                 </h2>
-                <p className="experience__lede">
-                    Four-month terms at the University of Waterloo, with
-                    projects and work branching off — and merging back as each
-                    one wraps.
-                </p>
                 <ul
                     className="experience__legend"
                     aria-label="Timeline branch colors"
@@ -627,84 +562,69 @@ function Experience() {
                     className="experience__timeline"
                     aria-label="School terms with project and work branches"
                 >
-                    {rows.map((row) => {
+                    {rows.map((row, rowIndex) => {
                         const rowClasses = ['term'];
-                        if (row.kind === 'bridge') {
-                            rowClasses.push('term--bridge');
-                        } else {
-                            if (row.isFirst) {
-                                rowClasses.push('term--first');
-                            }
-                            if (row.isLast) {
-                                rowClasses.push('term--last');
-                            }
+                        if (row.isFirst) {
+                            rowClasses.push('term--first');
+                        }
+                        if (row.isLast) {
+                            rowClasses.push('term--last');
                         }
                         if (row.hasEnd) {
                             rowClasses.push('term--merge');
                         }
-                        if (row.hasStart) {
-                            rowClasses.push('term--has-start');
+                        if (rows[rowIndex + 1]?.hasEnd) {
+                            rowClasses.push('term--next-merge');
                         }
 
                         return (
                             <li
                                 key={row.key}
                                 className={rowClasses.join(' ')}
-                                data-term-row={
-                                    row.kind === 'term' ? row.term : undefined
-                                }
+                                data-term-row={row.term}
                             >
-                                {row.kind === 'term' ? (
-                                    <div
+                                <div
+                                    className={[
+                                        'axis',
+                                        row.isFirst ? 'axis--first' : '',
+                                        row.isLast ? 'axis--last' : '',
+                                        row.hasEnd ? 'axis--merge' : '',
+                                    ]
+                                        .filter(Boolean)
+                                        .join(' ')}
+                                >
+                                    <span
                                         className={[
-                                            'axis',
-                                            row.isFirst ? 'axis--first' : '',
-                                            row.isLast ? 'axis--last' : '',
-                                            row.hasEnd ? 'axis--merge' : '',
+                                            'axis__node',
+                                            row.isCurrent
+                                                ? 'axis__node--current'
+                                                : '',
                                         ]
                                             .filter(Boolean)
                                             .join(' ')}
-                                    >
-                                        <span
-                                            className={[
-                                                'axis__node',
-                                                row.isCurrent
-                                                    ? 'axis__node--current'
-                                                    : '',
-                                            ]
-                                                .filter(Boolean)
-                                                .join(' ')}
-                                            data-axis-node={row.term}
-                                            aria-hidden="true"
-                                        />
-                                        <span
-                                            className={[
-                                                'axis__label',
-                                                row.isCurrent
-                                                    ? 'axis__label--current'
-                                                    : '',
-                                            ]
-                                                .filter(Boolean)
-                                                .join(' ')}
-                                            title={termLongLabel(row.term)}
-                                        >
-                                            {row.term}
-                                        </span>
-                                        <span className="sr-only">
-                                            {termLongLabel(row.term)}
-                                        </span>
-                                        {row.isCurrent ? (
-                                            <span className="axis__now">
-                                                now
-                                            </span>
-                                        ) : null}
-                                    </div>
-                                ) : (
-                                    <div
-                                        className="axis axis--lineonly"
+                                        data-axis-node={row.term}
                                         aria-hidden="true"
                                     />
-                                )}
+                                    <span
+                                        className={[
+                                            'axis__label',
+                                            row.isCurrent
+                                                ? 'axis__label--current'
+                                                : '',
+                                        ]
+                                            .filter(Boolean)
+                                            .join(' ')}
+                                        title={termLongLabel(row.term)}
+                                    >
+                                        {row.term}
+                                    </span>
+                                    <span className="sr-only">
+                                        {termLongLabel(row.term)}
+                                    </span>
+                                    {row.isCurrent ? (
+                                        <span className="axis__now">now</span>
+                                    ) : null}
+                                </div>
 
                                 {row.projects.length > 0 ? (
                                     <div className="cards cards--projects has-entries">
@@ -736,7 +656,6 @@ function Experience() {
                                         state={row.projectState}
                                         ongoing={
                                             row.projectBranch.ongoing &&
-                                            row.kind === 'term' &&
                                             row.isLast
                                         }
                                         shifted={
@@ -752,7 +671,6 @@ function Experience() {
                                         state={row.workState}
                                         ongoing={
                                             row.workBranch.ongoing &&
-                                            row.kind === 'term' &&
                                             row.isLast
                                         }
                                         shifted={

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     Chart as ChartJS,
     RadialLinearScale,
@@ -23,45 +23,15 @@ ChartJS.register(
     Legend
 );
 
-const options: ChartOptions<"radar"> = {
-    responsive: true,
-    maintainAspectRatio: false,
+const FALLBACK_POINT_LABEL_COLOR = '#6b6375';
 
-    scales: {
-        r: {
-            min: 0,
-            max: 10,
-
-            ticks: {
-                stepSize: 2,
-                display: false,
-            },
-
-            grid: {
-                color: "rgba(100, 116, 139, 0.3)",
-            },
-            angleLines: {
-                color: "rgba(100, 116, 139, 0.3)",
-            },
-            pointLabels: {
-                color: "#172033",
-                font: {
-                    size: 13,
-                    weight: 600,
-                },
-            },
-        },
-    },
-    plugins: {
-        legend: {
-            display: false
-        },
-
-        tooltip: {
-            enabled: false,
-        },
-    },
-};
+/** Read the current body-text colour from the site palette. */
+function readPointLabelColor(): string {
+    const value = getComputedStyle(document.documentElement)
+        .getPropertyValue('--text')
+        .trim();
+    return value || FALLBACK_POINT_LABEL_COLOR;
+}
 
 /** Convert a #rrggbb colour to an rgba() string with the given alpha. */
 function hexToRgba(hex: string, alpha: number): string {
@@ -74,6 +44,59 @@ function hexToRgba(hex: string, alpha: number): string {
 
 function RadarChart() {
     const [hoveredId, setHoveredId] = useState<string | null>(null);
+    const [pointLabelColor, setPointLabelColor] = useState(
+        readPointLabelColor,
+    );
+
+    useEffect(() => {
+        const query = window.matchMedia('(prefers-color-scheme: dark)');
+        const updateColor = () => setPointLabelColor(readPointLabelColor());
+        query.addEventListener('change', updateColor);
+        return () => query.removeEventListener('change', updateColor);
+    }, []);
+
+    const options = useMemo<ChartOptions<'radar'>>(
+        () => ({
+            responsive: true,
+            maintainAspectRatio: false,
+
+            scales: {
+                r: {
+                    min: 0,
+                    max: 10,
+
+                    ticks: {
+                        stepSize: 2,
+                        display: false,
+                    },
+
+                    grid: {
+                        color: 'rgba(100, 116, 139, 0.3)',
+                    },
+                    angleLines: {
+                        color: 'rgba(100, 116, 139, 0.3)',
+                    },
+                    pointLabels: {
+                        color: pointLabelColor,
+                        font: {
+                            size: 13,
+                            weight: 600,
+                        },
+                    },
+                },
+            },
+            plugins: {
+                legend: {
+                    display: false,
+                },
+
+                tooltip: {
+                    enabled: false,
+                },
+            },
+        }),
+        [pointLabelColor],
+    );
 
     const data = useMemo<ChartData<'radar'>>(() => {
         const datasets = jobs.map((job) => {

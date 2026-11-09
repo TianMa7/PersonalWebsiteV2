@@ -3,7 +3,7 @@
 
     margin-inline: auto;
 
-    padding-block: 4rem;
+    padding-block: 4rem 2rem;
 
     scroll-margin-top: 5rem;
 }
@@ -20,11 +20,16 @@
 .hero__content {
     display: grid;
     grid-template-columns:
-        minmax(0, 0.7fr)
-        minmax(0, 2fr)
-        minmax(0, 1fr);
+        minmax(0, 0.8fr)
+        minmax(0, 1fr)
+        minmax(0, 2.2fr);
     align-items: center;
     gap: 1rem;
+}
+
+.hero__description,
+.hero__stats {
+    min-width: 0;
 }
 
 .hero__images {
@@ -51,8 +56,41 @@
     border-radius: 1rem;
 }
 
+.hero__logo {
+    display: block;
+    width: 100%;
+    margin-inline: auto;
+}
+
 .hero__waterlooLogo {
+    display: block;
+    width: 100%;
     max-width: 100%;
     margin-inline: auto;
     object-fit: contain;
+}
+
+/*
+ * The chart sits in the narrow right column on desktop. Below 900px that
+ * column is too narrow for the chart's fixed legend, so give the chart its
+ * own full-width row instead of letting it overflow the page.
+ */
+@media (max-width: 900px) {
+    .hero__content {
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+        align-items: start;
+        gap: 2rem 1.25rem;
+    }
+
+    .hero__images {
+        grid-column: 1;
+    }
+
+    .hero__description {
+        grid-column: 2;
+    }
+
+    .hero__stats {
+        grid-column: 1 / -1;
+    }
 }

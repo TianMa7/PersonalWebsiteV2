@@ -36,6 +36,7 @@
     --exp-branch-node: 20px;
     --exp-node-top: 24px;
     --exp-node-center: calc(var(--exp-node-top) + var(--exp-main-node) / 2);
+    --exp-row-h: 420px;
     --exp-arm-run: calc(
         var(--exp-lane) * 3 + var(--exp-axis) / 2 + var(--exp-rail) / 2
     );
@@ -45,7 +46,7 @@
 
     width: min(100% - 2rem, 1120px);
     margin-inline: auto;
-    padding-block: 4.5rem 4rem;
+    padding-block: 2.5rem 4rem;
     color: var(--exp-text);
     font-family: var(--sans);
     text-align: left;
@@ -85,20 +86,6 @@
         text-align: center;
     }
 
-    .experience__eyebrow {
-        margin: 0 0 0.9rem;
-        color: var(--exp-muted);
-        font-family: var(--mono);
-        font-size: 0.78rem;
-        line-height: 1.5;
-        letter-spacing: 0.015em;
-    }
-
-    .experience__eyebrow .prompt {
-        color: var(--exp-projects-ink);
-        font-weight: 700;
-    }
-
     .experience__title {
         margin: 0;
         color: var(--exp-ink);
@@ -107,14 +94,6 @@
         font-weight: 500;
         line-height: 1.05;
         letter-spacing: -0.035em;
-    }
-
-    .experience__lede {
-        max-width: 590px;
-        margin: 1rem auto 0;
-        color: var(--exp-text);
-        font-size: 1rem;
-        line-height: 1.6;
     }
 
     .experience__legend {
@@ -213,12 +192,34 @@
         position: relative;
     }
 
-    .term--has-start {
-        min-height: calc(var(--exp-arm-join) + 3rem);
-    }
+    /*
+     * Equal node pitch: a regular row starts its node at --exp-node-center,
+     * while a merge row pushes its node down by --exp-arm-rise. Compensate on
+     * the adjacent rows so every term node stays exactly one row-height apart.
+     */
+    @media (min-width: 901px) {
+        .term {
+            height: var(--exp-row-h);
+            /*
+             * Keep the internal track equal to the fixed row height. Without
+             * this, tall card content can grow the implicit track past the
+             * row box, stretching the rails into the next row and leaving
+             * visible tails beside a merge.
+             */
+            grid-template-rows: minmax(0, 1fr);
+        }
 
-    .term--merge {
-        min-height: calc(var(--exp-arm-join) + 8rem);
+        .term--next-merge {
+            height: calc(var(--exp-row-h) - var(--exp-arm-rise));
+        }
+
+        .term--merge {
+            height: calc(var(--exp-row-h) + var(--exp-arm-rise));
+        }
+
+        .term--merge.term--next-merge {
+            height: var(--exp-row-h);
+        }
     }
 
     /* ------------------------------------------------------------
@@ -294,10 +295,6 @@
         );
     }
 
-    .axis--lineonly {
-        padding-top: 0;
-    }
-
     .axis > * {
         position: relative;
         z-index: 1;
@@ -340,22 +337,19 @@
     .axis__now {
         display: inline-flex;
         align-items: center;
-        gap: 0.3rem;
-        margin-top: 0.38rem;
-        color: var(--exp-school-ink);
+        justify-content: center;
+        margin-top: 0.42rem;
+        padding: 0.13rem 0.38rem;
+        border-radius: 999px;
+        background: var(--exp-ink);
+        color: var(--exp-surface);
         font-family: var(--mono);
-        font-size: 0.6rem;
-        line-height: 1.4;
-        letter-spacing: 0.13em;
+        font-size: 0.58rem;
+        font-weight: 700;
+        line-height: 1.25;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
-    }
-
-    .axis__now::before {
-        content: '';
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: currentColor;
+        white-space: nowrap;
     }
 
     /* ------------------------------------------------------------
@@ -707,7 +701,7 @@
         --exp-branch-node: 18px;
         --exp-node-top: 1.25rem;
 
-        padding-block: 3.5rem 3rem;
+        padding-block: 2rem 2.5rem;
 
         .experience__graph {
             margin-top: 2.75rem;
@@ -718,12 +712,6 @@
             grid-template-rows: auto auto;
             column-gap: 1rem;
             row-gap: 1.5rem;
-            min-height: 0;
-        }
-
-        .term--has-start,
-        .term--merge {
-            min-height: 0;
         }
 
         .axis {
@@ -791,10 +779,6 @@
             font-size: 1.22rem;
         }
 
-        .experience__lede {
-            font-size: 0.97rem;
-        }
-
         .experience__legend {
             gap: 0.7rem 1.15rem;
         }
@@ -821,7 +805,8 @@
         }
 
         .axis__now {
-            font-size: 0.52rem;
+            font-size: 0.55rem;
+            letter-spacing: 0.09em;
         }
 
         .cards.has-entries {
