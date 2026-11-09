@@ -36,7 +36,7 @@ export const jobs: Job[] = [
     {
         id: 'qquote',
         company: 'QQuote',
-        location: 'Toronto, Canada',
+        location: 'Toronto, Ontario',
         title: 'Product R&D',
         logo: qquoteLogo,
         color: '#f7a94f',
@@ -45,7 +45,7 @@ export const jobs: Job[] = [
     {
         id: 'tkms',
         company: 'TKMS',
-        location: 'Oakville, Canada',
+        location: 'Oakville, Ontario',
         title: 'Mechanical Design',
         logo: tkmsLogo,
         color: '#4f8ef7',
@@ -54,7 +54,7 @@ export const jobs: Job[] = [
     {
         id: 'uwfe',
         company: 'UW Formula Electric',
-        location: 'Waterloo, Canada',
+        location: 'Waterloo, Ontario',
         title: 'Composite R&D',
         logo: uwfeLogo,
         color: '#3ecf8e',
