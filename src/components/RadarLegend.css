@@ -1,0 +1,119 @@
+.radar-legend {
+    width: 240px;
+    flex: 0 0 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+    text-align: left;
+}
+
+.radar-legend__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.radar-legend__block {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    height: 64px;
+    padding: 0 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: transparent;
+    color: var(--text);
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-align: left;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        background 0.2s,
+        transform 0.2s,
+        opacity 0.2s;
+}
+
+.radar-legend__block:hover {
+    border-color: var(--accent-border);
+}
+
+.radar-legend__block.is-active {
+    border-color: var(--accent-border);
+    background: var(--accent-bg);
+    box-shadow: 0 0 0 1px var(--accent-border), 0 0 18px rgba(170, 59, 255, 0.2);
+    transform: translateX(2px);
+}
+
+/* Non-active blocks sit dimmed so the emphasised one pops. */
+.radar-legend__block:not(.is-active) {
+    opacity: 0.6;
+}
+
+.radar-legend__logo {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: var(--code-bg);
+}
+
+.radar-legend__logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.radar-legend__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.05rem;
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+    line-height: 1.15;
+}
+
+.radar-legend__company {
+    font-weight: 700;
+    font-size: 0.85rem;
+    line-height: 1.15;
+    color: var(--text-h);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.radar-legend__location {
+    font-size: 0.65rem;
+    line-height: 1.15;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.radar-legend__title {
+    font-size: 0.78rem;
+    line-height: 1.15;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

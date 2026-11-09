@@ -1,5 +1,5 @@
 .hero {
-    width: min(calc(100% - 2rem), 1200px);
+    width: min(calc(100% - 2rem), 1440px);
 
     margin-inline: auto;
 
@@ -9,20 +9,20 @@
 }
 
 /*------------------Banner Title-----------------*/
-.hero__title {
-    margin: 0;
-    margin-bottom: 3rem;
-    text-align: center;
-    font-size: clamp(2rem, 5vw, 4rem);
-    line-height: 1.1;
-}
+/*.hero__title {*/
+/*    margin: 0;*/
+/*    margin-bottom: 3rem;*/
+/*    text-align: center;*/
+/*    font-size: clamp(2rem, 5vw, 4rem);*/
+/*    line-height: 1.1;*/
+/*}*/
 
 .hero__content {
     display: grid;
     grid-template-columns:
-        minmax(0, 0.8fr)
-        minmax(0, 1.2fr)
-        minmax(0, 1.5fr);
+        minmax(0, 0.7fr)
+        minmax(0, 2fr)
+        minmax(0, 1fr);
     align-items: center;
     gap: 1rem;
 }

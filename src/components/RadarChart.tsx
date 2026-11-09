@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import {
     Chart as ChartJS,
     RadialLinearScale,
@@ -9,6 +10,8 @@ import {
 } from 'chart.js';
 import type { ChartData, ChartOptions } from "chart.js";
 import { Radar } from 'react-chartjs-2';
+import { jobs, RADAR_LABELS } from '../data/jobs';
+import RadarLegend from './RadarLegend';
 import './RadarChart.css';
 
 ChartJS.register(
@@ -19,45 +22,6 @@ ChartJS.register(
     Tooltip,
     Legend
 );
-
-const data: ChartData<"radar"> = {
-    labels: [
-        'skill1',
-        'skill2',
-        'skill3',
-        'skill4',
-        'skill5',
-        'skill6',
-    ],
-    datasets: [
-        {
-            label: 'QQuote',
-            data: [1,5,3,5,6,7],
-
-            fill: true,
-            backgroundColor: 'rgba(225,99,132,0.2)',
-            borderColor: 'rgba(225,99,132,1)',
-            pointBackgroundColor: 'rgba(225,99,132,1)',
-            pointBorderColor: 'rgba(225,99,132,1)',
-            pointHoverBackgroundColor: 'rgba(225,99,132,1)',
-            pointHoverBorderColor: 'rgba(225,99,132,1)',
-            borderWidth: 1,
-        },
-        {
-            label: 'TKMS',
-            data: [1,5,3,9,0,8],
-
-            fill: true,
-            backgroundColor: 'rgba(225,99,132,0.2)',
-            borderColor: 'rgba(225,99,132,1)',
-            pointBackgroundColor: 'rgba(225,99,132,1)',
-            pointBorderColor: 'rgba(225,99,132,1)',
-            pointHoverBackgroundColor: 'rgba(225,99,132,1)',
-            pointHoverBorderColor: 'rgba(225,99,132,1)',
-            borderWidth: 1,
-        },
-    ],
-};
 
 const options: ChartOptions<"radar"> = {
     responsive: true,
@@ -99,14 +63,62 @@ const options: ChartOptions<"radar"> = {
     },
 };
 
-function RadarChart(){
+/** Convert a #rrggbb colour to an rgba() string with the given alpha. */
+function hexToRgba(hex: string, alpha: number): string {
+    const value = hex.replace('#', '');
+    const r = parseInt(value.substring(0, 2), 16);
+    const g = parseInt(value.substring(2, 4), 16);
+    const b = parseInt(value.substring(4, 6), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function RadarChart() {
+    const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+    const data = useMemo<ChartData<'radar'>>(() => {
+        const datasets = jobs.map((job) => {
+            const isEmphasised = hoveredId === null || hoveredId === job.id;
+            const borderAlpha = isEmphasised ? 1 : 0.35;
+            const fillAlpha = isEmphasised ? 0.25 : 0.06;
+            const pointAlpha = isEmphasised ? 1 : 0.35;
+
+            return {
+                label: job.company,
+                data: job.values,
+                fill: true,
+                backgroundColor: hexToRgba(job.color, fillAlpha),
+                borderColor: hexToRgba(job.color, borderAlpha),
+                pointBackgroundColor: hexToRgba(job.color, pointAlpha),
+                pointBorderColor: hexToRgba(job.color, pointAlpha),
+                pointHoverBackgroundColor: hexToRgba(job.color, 1),
+                pointHoverBorderColor: hexToRgba(job.color, 1),
+                borderWidth: isEmphasised ? 2 : 1,
+            };
+        });
+
+        return {
+            labels: [...RADAR_LABELS],
+            datasets,
+        };
+    }, [hoveredId]);
+
+    const handleHover = (id: string | null) => setHoveredId(id);
+
     return (
         <figure className="radar-chart">
-            <div className="radar-chart__canvas">
-                <Radar data={data} options={options} />
+            <div className="radar-chart__body">
+                <div className="radar-chart__canvas">
+                    <Radar data={data} options={options} />
+                </div>
+                <RadarLegend
+                    jobs={jobs}
+                    activeId={hoveredId}
+                    onHover={handleHover}
+                    onLeave={() => setHoveredId(null)}
+                />
             </div>
         </figure>
-    )
+    );
 }
 
 export default RadarChart;

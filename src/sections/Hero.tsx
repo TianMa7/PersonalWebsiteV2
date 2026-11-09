@@ -6,7 +6,7 @@ import "./Hero.css";
 function Hero() {
     return (
       <section className="hero" id="home">
-          <h1 className="hero__title">Tian's Profile</h1>
+          {/*<h1 className="hero__title">Tian's Profile</h1>*/}
 
           <div className="hero__content">
               <div className="hero__images">

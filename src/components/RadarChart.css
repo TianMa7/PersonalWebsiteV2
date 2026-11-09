@@ -4,21 +4,35 @@
     text-align: center;
 }
 
+.radar-chart__body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+/*
+ * Chart.js uses the size of this container because
+ * maintainAspectRatio is disabled.
+ */
 .radar-chart__canvas {
-    /*
-     * Chart.js uses the size of this container because
-     * maintainAspectRatio is disabled.
-     */
     position: relative;
     width: 100%;
-    max-width: 380px;
-    height: 340px;
-    margin-inline: auto;
+    max-width: 300px;
+    height: 320px;
 }
 
 @media (max-width: 650px) {
-.radar-chart__canvas {
-    max-width: 330px;
-    height: 300px;
-}
+    .radar-chart__canvas {
+        max-width: 330px;
+        height: 300px;
+    }
+
+    /* Stack the legend underneath the plot on narrow screens. */
+    .radar-chart__body {
+        flex-direction: column;
+        gap: 1rem;
+    }
 }
