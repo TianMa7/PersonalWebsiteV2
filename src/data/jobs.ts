@@ -1,7 +1,7 @@
-import qquoteLogo from '../assets/qquote.svg';
-import tkmsLogo from '../assets/tkms.svg';
-import novaLogo from '../assets/nova.svg';
-import hexaLogo from '../assets/hexa.svg';
+import qquoteLogo from '../assets/qquote.png';
+import tkmsLogo from '../assets/tkms.jpg';
+import uwfeLogo from '../assets/uwfe.jpg';
+import walleLogo from '../assets/wall-e.jpg';
 
 /** Stat axes rendered by the radar chart. */
 export const RADAR_LABELS = [
@@ -37,35 +37,35 @@ export const jobs: Job[] = [
         id: 'qquote',
         company: 'QQuote',
         location: 'Toronto, Canada',
-        title: 'Software Engineer',
+        title: 'Product R&D',
         logo: qquoteLogo,
-        color: '#e16384',
+        color: '#f7a94f',
         values: [7, 5, 6, 4, 8, 6],
     },
     {
         id: 'tkms',
         company: 'TKMS',
-        location: 'Kiel, Germany',
-        title: 'Embedded Developer',
+        location: 'Oakville, Canada',
+        title: 'Mechanical Design',
         logo: tkmsLogo,
         color: '#4f8ef7',
         values: [5, 8, 7, 6, 5, 7],
     },
     {
-        id: 'nova',
-        company: 'Nova Labs',
-        location: 'Berlin, Germany',
-        title: 'Full-Stack Engineer',
-        logo: novaLogo,
+        id: 'uwfe',
+        company: 'UW Formula Electric',
+        location: 'Waterloo, Canada',
+        title: 'Composite R&D',
+        logo: uwfeLogo,
         color: '#3ecf8e',
         values: [9, 6, 5, 7, 8, 6],
     },
     {
-        id: 'hexa',
-        company: 'Hexa Games',
-        location: 'Montreal, Canada',
-        title: 'Gameplay Developer',
-        logo: hexaLogo,
+        id: 'proj',
+        company: 'Projects',
+        location: 'Living Room, Sorry Dad',
+        title: 'Make. Break. Learn.',
+        logo: walleLogo,
         color: '#f7a94f',
         values: [8, 9, 6, 5, 7, 8],
     },

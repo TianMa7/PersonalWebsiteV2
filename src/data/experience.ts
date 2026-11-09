@@ -58,14 +58,14 @@ export interface WorkEntry {
 
 export const PROJECTS: ProjectEntry[] = [
     {
-        id: 'lumen',
+        id: 'card',
         startTerm: 'F25',
-        endTerm: 'S26',
-        name: 'Lumen',
+        endTerm: 'W26',
+        name: 'Autonomous Card Dealer',
         location: 'Waterloo, ON',
-        focus: 'WebGL · real-time rendering',
+        focus: 'Robotics · C++ · Path-Planning',
         description:
-            'A browser-based lighting sandbox for real-time scene studies. Drag light sources and materials, then watch the render update without a build step.',
+            'Faster than humans. Cooler than the competition. A VEX-based autonomous card dealer built for the biggest parties.',
         // images: [{ src: lumenEditor, alt: 'Lumen lighting editor' }],
         repoUrl: 'https://github.com/',
     },
