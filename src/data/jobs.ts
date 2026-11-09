@@ -66,7 +66,7 @@ export const jobs: Job[] = [
         location: 'Living Room, Sorry Dad',
         title: 'Make. Break. Learn.',
         logo: walleLogo,
-        color: '#f7a94f',
+        color: '#7c3aed',
         values: [8, 9, 6, 5, 7, 8],
     },
 ];
