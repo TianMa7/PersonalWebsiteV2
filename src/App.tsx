@@ -4,6 +4,7 @@
 // import heroImg from './assets/hero.png'
 import Header from './sections/Header.tsx'
 import Hero from './sections/Hero.tsx'
+import Experience from './sections/Experience.tsx'
 import './App.css'
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
     <div>
       <Header />
         <Hero />
+        <Experience />
     </div>
   )
   // const [count, setCount] = useState(0)

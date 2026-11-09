@@ -1,0 +1,893 @@
+/* ============================================================
+   EXPERIENCE SECTION
+   Scoped entirely under .experience so it cannot affect the rest
+   of the site. The timeline is a 13-track grid:
+   cards | node gutter | rail | 3 lanes | school axis | 3 lanes | rail | node gutter | cards
+   ============================================================ */
+
+.experience {
+    --exp-surface: #ffffff;
+    --exp-soft-surface: #f7f8fb;
+    --exp-ink: #172033;
+    --exp-text: #5b6475;
+    --exp-muted: #737c8c;
+    --exp-border: #e5e7eb;
+    --exp-border-strong: #d6dbe4;
+    --exp-school: #f2b600;
+    --exp-school-ink: #8f6500;
+    --exp-on-school: #1f2937;
+    --exp-projects: #7c3aed;
+    --exp-projects-ink: #6d28d9;
+    --exp-projects-soft: rgba(124, 58, 237, 0.075);
+    --exp-projects-line: rgba(124, 58, 237, 0.22);
+    --exp-work: #2563eb;
+    --exp-work-ink: #1d4ed8;
+    --exp-work-soft: rgba(37, 99, 235, 0.08);
+    --exp-work-line: rgba(37, 99, 235, 0.24);
+    --exp-dot: rgba(15, 23, 42, 0.1);
+    --exp-shadow: 0 18px 45px -30px rgba(15, 23, 42, 0.38);
+    --exp-shadow-hover: 0 24px 52px -30px rgba(15, 23, 42, 0.48);
+
+    --exp-lane: 14px;
+    --exp-gutter: 36px;
+    --exp-rail: 4px;
+    --exp-axis: 136px;
+    --exp-main-node: 30px;
+    --exp-branch-node: 20px;
+    --exp-node-top: 24px;
+    --exp-node-center: calc(var(--exp-node-top) + var(--exp-main-node) / 2);
+    --exp-arm-run: calc(
+        var(--exp-lane) * 3 + var(--exp-axis) / 2 + var(--exp-rail) / 2
+    );
+    --exp-arm-rise: calc(var(--exp-arm-run) * 0.5773502692);
+    --exp-arm-join: calc(var(--exp-node-center) + var(--exp-arm-rise));
+    --exp-fillet: 18px;
+
+    width: min(100% - 2rem, 1120px);
+    margin-inline: auto;
+    padding-block: 4.5rem 4rem;
+    color: var(--exp-text);
+    font-family: var(--sans);
+    text-align: left;
+    scroll-margin-top: 5rem;
+    box-sizing: border-box;
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .icon {
+        display: block;
+        flex: none;
+    }
+
+    /* ------------------------------------------------------------
+       SECTION HEADER
+       ------------------------------------------------------------ */
+
+    .experience__header {
+        max-width: 700px;
+        margin-inline: auto;
+        text-align: center;
+    }
+
+    .experience__eyebrow {
+        margin: 0 0 0.9rem;
+        color: var(--exp-muted);
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        line-height: 1.5;
+        letter-spacing: 0.015em;
+    }
+
+    .experience__eyebrow .prompt {
+        color: var(--exp-projects-ink);
+        font-weight: 700;
+    }
+
+    .experience__title {
+        margin: 0;
+        color: var(--exp-ink);
+        font-family: var(--sans);
+        font-size: clamp(2.35rem, 5vw, 3.1rem);
+        font-weight: 500;
+        line-height: 1.05;
+        letter-spacing: -0.035em;
+    }
+
+    .experience__lede {
+        max-width: 590px;
+        margin: 1rem auto 0;
+        color: var(--exp-text);
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .experience__legend {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.8rem 1.5rem;
+        margin: 1.6rem 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .experience__legend li {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--exp-muted);
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .key {
+        width: 16px;
+        height: 16px;
+        border: 4px solid currentColor;
+        border-radius: 50%;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px var(--bg);
+    }
+
+    .key--school {
+        color: var(--exp-school);
+    }
+
+    .key--projects {
+        color: var(--exp-projects);
+    }
+
+    .key--work {
+        color: var(--exp-work);
+    }
+
+    /* ------------------------------------------------------------
+       GRAPH + TRACK GRID
+       ------------------------------------------------------------ */
+
+    .experience__graph {
+        position: relative;
+        margin-top: 3.75rem;
+    }
+
+    .experience__graph::before {
+        content: '';
+        position: absolute;
+        inset: -1.8rem -1rem;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.55;
+        background-image: radial-gradient(
+            circle,
+            var(--exp-dot) 1px,
+            transparent 1.2px
+        );
+        background-size: 26px 26px;
+        -webkit-mask-image: radial-gradient(
+            ellipse 82% 76% at 50% 44%,
+            #000 28%,
+            transparent 80%
+        );
+        mask-image: radial-gradient(
+            ellipse 82% 76% at 50% 44%,
+            #000 28%,
+            transparent 80%
+        );
+    }
+
+    .experience__timeline {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .term {
+        display: grid;
+        grid-template-columns:
+            minmax(0, 1fr) var(--exp-gutter) var(--exp-rail)
+            var(--exp-lane) var(--exp-lane) var(--exp-lane)
+            var(--exp-axis)
+            var(--exp-lane) var(--exp-lane) var(--exp-lane)
+            var(--exp-rail) var(--exp-gutter)
+            minmax(0, 1fr);
+        position: relative;
+    }
+
+    .term--has-start {
+        min-height: calc(var(--exp-arm-join) + 3rem);
+    }
+
+    .term--merge {
+        min-height: calc(var(--exp-arm-join) + 8rem);
+    }
+
+    /* ------------------------------------------------------------
+       SIDE CARD CELLS
+       ------------------------------------------------------------ */
+
+    .cards {
+        position: relative;
+        z-index: 4;
+        grid-row: 1;
+        min-width: 0;
+    }
+
+    .cards--projects {
+        grid-column: 1;
+    }
+
+    .cards--work {
+        grid-column: 13;
+    }
+
+    .cards.has-entries {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-block: 2.25rem;
+    }
+
+    /* ------------------------------------------------------------
+       SCHOOL AXIS
+       ------------------------------------------------------------ */
+
+    .axis {
+        position: relative;
+        z-index: 3;
+        grid-column: 7;
+        grid-row: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: var(--exp-node-top);
+        min-width: 0;
+    }
+
+    .axis::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        z-index: 0;
+        width: 4px;
+        transform: translateX(-50%);
+        background: var(--exp-school);
+    }
+
+    .axis--first::before {
+        top: var(--exp-node-center);
+    }
+
+    .axis--last::before {
+        -webkit-mask-image: linear-gradient(
+            to bottom,
+            #000 42%,
+            transparent 100%
+        );
+        mask-image: linear-gradient(to bottom, #000 42%, transparent 100%);
+    }
+
+    .axis--merge {
+        padding-top: calc(
+            var(--exp-arm-join) - var(--exp-main-node) / 2
+        );
+    }
+
+    .axis--lineonly {
+        padding-top: 0;
+    }
+
+    .axis > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .axis__node {
+        width: var(--exp-main-node);
+        height: var(--exp-main-node);
+        border: 7px solid var(--exp-school);
+        border-radius: 50%;
+        background: #ffffff;
+        box-shadow: 0 0 0 6px var(--bg);
+    }
+
+    .axis__node--current {
+        box-shadow:
+            0 0 0 6px var(--bg),
+            0 0 0 11px rgba(242, 182, 0, 0.2);
+    }
+
+    .axis__label {
+        margin-top: 0.8rem;
+        padding: 0.3rem 0.64rem;
+        border: 1px solid var(--exp-border-strong);
+        border-radius: 999px;
+        background: var(--exp-surface);
+        color: var(--exp-ink);
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        line-height: 1.2;
+        letter-spacing: 0.03em;
+    }
+
+    .axis__label--current {
+        border-color: var(--exp-school);
+        background: var(--exp-school);
+        color: var(--exp-on-school);
+    }
+
+    .axis__now {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        margin-top: 0.38rem;
+        color: var(--exp-school-ink);
+        font-family: var(--mono);
+        font-size: 0.6rem;
+        line-height: 1.4;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+    }
+
+    .axis__now::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    /* ------------------------------------------------------------
+       BRANCH RAILS + 30° FILLETED ARMS
+       ------------------------------------------------------------ */
+
+    .rail {
+        position: relative;
+        z-index: 2;
+        grid-column: 3;
+        grid-row: 1;
+        align-self: stretch;
+        color: var(--exp-projects);
+    }
+
+    .rail--work {
+        grid-column: 11;
+        color: var(--exp-work);
+    }
+
+    .rail::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        width: 4px;
+        transform: translateX(-50%);
+        background: currentColor;
+    }
+
+    .rail--start::before {
+        top: calc(var(--exp-arm-join) + var(--exp-fillet));
+        bottom: 0;
+    }
+
+    .rail--start-shifted::before {
+        top: calc(
+            var(--exp-arm-join) + var(--exp-arm-rise) + var(--exp-fillet)
+        );
+    }
+
+    .rail--through::before {
+        top: 0;
+        bottom: 0;
+    }
+
+    .rail--end::before {
+        top: 0;
+        height: calc(var(--exp-node-center) - var(--exp-fillet));
+    }
+
+    .rail--ongoing::before {
+        -webkit-mask-image: linear-gradient(
+            to bottom,
+            #000 46%,
+            transparent 100%
+        );
+        mask-image: linear-gradient(to bottom, #000 46%, transparent 100%);
+    }
+
+    .rail__arm {
+        position: absolute;
+        top: var(--exp-node-center);
+        width: var(--exp-arm-run);
+        height: calc(var(--exp-arm-rise) + var(--exp-fillet));
+        overflow: visible;
+        pointer-events: none;
+    }
+
+    .rail--end .rail__arm {
+        top: calc(var(--exp-node-center) - var(--exp-fillet));
+    }
+
+    .rail--start-shifted .rail__arm {
+        top: var(--exp-arm-join);
+    }
+
+    .rail--projects .rail__arm {
+        left: 50%;
+    }
+
+    .rail--work .rail__arm {
+        right: 50%;
+    }
+
+    .rail__arm path {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 4;
+        stroke-linecap: round;
+    }
+
+    /* ------------------------------------------------------------
+       ENTRY NODES + CARDS
+       ------------------------------------------------------------ */
+
+    .entry {
+        position: relative;
+    }
+
+    .entry + .entry {
+        margin-top: 1.35rem;
+    }
+
+    .entry--project {
+        --branch: var(--exp-projects);
+        --branch-ink: var(--exp-projects-ink);
+        --branch-soft: var(--exp-projects-soft);
+        --branch-line: var(--exp-projects-line);
+    }
+
+    .entry--work {
+        --branch: var(--exp-work);
+        --branch-ink: var(--exp-work-ink);
+        --branch-soft: var(--exp-work-soft);
+        --branch-line: var(--exp-work-line);
+    }
+
+    @media (min-width: 901px) {
+        .entry--align {
+            transform: translateY(var(--mid-shift, 0px));
+        }
+    }
+
+    .entry__node {
+        position: absolute;
+        top: 50%;
+        right: -48px;
+        z-index: 5;
+        width: var(--exp-branch-node);
+        height: var(--exp-branch-node);
+        border: 5.2px solid var(--branch);
+        border-radius: 50%;
+        background: #ffffff;
+        box-shadow: 0 0 0 5px var(--bg);
+        transform: translateY(-50%);
+    }
+
+    .entry--work .entry__node {
+        right: auto;
+        left: -48px;
+    }
+
+    .entry::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: -28px;
+        z-index: 4;
+        width: 28px;
+        height: 4px;
+        background: var(--branch);
+        transform: translateY(-50%);
+    }
+
+    .entry--work::after {
+        right: auto;
+        left: -28px;
+    }
+
+    .card {
+        position: relative;
+        padding: 1.35rem 1.45rem;
+        border: 1px solid var(--exp-border);
+        border-radius: 16px;
+        background: var(--exp-surface);
+        box-shadow: var(--exp-shadow);
+        transition:
+            transform 180ms ease,
+            box-shadow 180ms ease,
+            border-color 180ms ease;
+    }
+
+    .card--project {
+        background:
+            linear-gradient(
+                180deg,
+                rgba(124, 58, 237, 0.035),
+                transparent 26%
+            ),
+            var(--exp-surface);
+    }
+
+    .card--work {
+        background:
+            linear-gradient(
+                180deg,
+                rgba(37, 99, 235, 0.04),
+                transparent 26%
+            ),
+            var(--exp-surface);
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+        border-color: var(--exp-border-strong);
+        box-shadow: var(--exp-shadow-hover);
+    }
+
+    .card__topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .card__kind {
+        color: var(--branch-ink);
+        font-family: var(--mono);
+        font-size: 0.64rem;
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .card__span {
+        flex: none;
+        padding: 0.16rem 0.4rem;
+        border: 1px solid var(--exp-border);
+        border-radius: 6px;
+        background: var(--exp-soft-surface);
+        color: var(--exp-muted);
+        font-family: var(--mono);
+        font-size: 0.61rem;
+        line-height: 1.4;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+    }
+
+    .card__title {
+        margin: 0.55rem 0 0;
+        color: var(--exp-ink);
+        font-size: 1.28rem;
+        font-weight: 600;
+        line-height: 1.18;
+        letter-spacing: -0.015em;
+    }
+
+    .card__focus {
+        display: inline-block;
+        margin: 0.6rem 0 0;
+        padding: 0.24rem 0.5rem;
+        border-radius: 6px;
+        background: var(--branch-soft);
+        color: var(--branch-ink);
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        line-height: 1.4;
+        letter-spacing: 0.005em;
+    }
+
+    .card__company {
+        margin: 0.42rem 0 0;
+        color: var(--exp-work-ink);
+        font-size: 0.92rem;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    .card__meta {
+        display: flex;
+        align-items: center;
+        gap: 0.32rem;
+        margin: 0.62rem 0 0;
+        color: var(--exp-muted);
+        font-size: 0.78rem;
+        line-height: 1.4;
+    }
+
+    .card__meta .icon {
+        width: 13px;
+        height: 13px;
+    }
+
+    .card__description {
+        margin: 0.75rem 0 0;
+        color: var(--exp-text);
+        font-size: 0.9rem;
+        line-height: 1.62;
+    }
+
+    .card__media {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .card__media--single {
+        grid-template-columns: 1fr;
+    }
+
+    .card__image {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        border: 1px solid var(--exp-border);
+        border-radius: 10px;
+        background: var(--exp-soft-surface);
+    }
+
+    .card__repo {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-top: 1rem;
+        padding: 0.44rem 0.62rem;
+        border: 1px solid var(--exp-projects-line);
+        border-radius: 8px;
+        background: var(--exp-projects-soft);
+        color: var(--exp-projects-ink);
+        font-size: 0.75rem;
+        font-weight: 600;
+        line-height: 1;
+        text-decoration: none;
+        transition:
+            background 160ms ease,
+            border-color 160ms ease;
+    }
+
+    .card__repo:hover {
+        border-color: rgba(124, 58, 237, 0.42);
+        background: rgba(124, 58, 237, 0.13);
+    }
+
+    .card__repo:focus-visible {
+        outline: 2px solid var(--exp-projects);
+        outline-offset: 3px;
+    }
+
+    .card__repo .icon {
+        width: 14px;
+        height: 14px;
+    }
+
+    .card__repo .icon--arrow {
+        width: 12px;
+        height: 12px;
+        opacity: 0.75;
+    }
+
+    /* ------------------------------------------------------------
+       RESPONSIVE — single left school axis under 900px
+       ------------------------------------------------------------ */
+
+    @media (max-width: 900px) {
+        --exp-main-node: 26px;
+        --exp-branch-node: 18px;
+        --exp-node-top: 1.25rem;
+
+        padding-block: 3.5rem 3rem;
+
+        .experience__graph {
+            margin-top: 2.75rem;
+        }
+
+        .term {
+            grid-template-columns: 52px minmax(0, 1fr);
+            grid-template-rows: auto auto;
+            column-gap: 1rem;
+            row-gap: 1.5rem;
+            min-height: 0;
+        }
+
+        .term--has-start,
+        .term--merge {
+            min-height: 0;
+        }
+
+        .axis {
+            grid-column: 1;
+            grid-row: 1 / span 2;
+            align-self: stretch;
+        }
+
+        .axis--merge {
+            padding-top: var(--exp-node-top);
+        }
+
+        .axis__node {
+            border-width: 5.8px;
+        }
+
+        .axis__label {
+            padding: 0.24rem 0.5rem;
+            font-size: 0.7rem;
+        }
+
+        .cards--projects {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .cards--work {
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        .cards.has-entries {
+            padding-block: 0 2rem;
+        }
+
+        .rail {
+            display: none;
+        }
+
+        .entry__node {
+            top: 50%;
+            right: auto;
+            left: -9px;
+            width: var(--exp-branch-node);
+            height: var(--exp-branch-node);
+            border-width: 4.2px;
+            box-shadow: 0 0 0 4px var(--bg);
+            transform: translateY(-50%);
+        }
+
+        .entry--work .entry__node {
+            left: -9px;
+        }
+
+        .entry::after {
+            display: none;
+        }
+
+        .card {
+            border-radius: 14px;
+            padding: 1.2rem 1.2rem 1.15rem;
+        }
+
+        .card__title {
+            font-size: 1.22rem;
+        }
+
+        .experience__lede {
+            font-size: 0.97rem;
+        }
+
+        .experience__legend {
+            gap: 0.7rem 1.15rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        --exp-main-node: 24px;
+        --exp-branch-node: 18px;
+        --exp-node-top: 1.1rem;
+
+        .term {
+            grid-template-columns: 44px minmax(0, 1fr);
+            column-gap: 0.75rem;
+            row-gap: 1.25rem;
+        }
+
+        .axis__node {
+            border-width: 5.6px;
+        }
+
+        .axis__label {
+            padding: 0.2rem 0.42rem;
+            font-size: 0.64rem;
+        }
+
+        .axis__now {
+            font-size: 0.52rem;
+        }
+
+        .cards.has-entries {
+            padding-block: 0 1.75rem;
+        }
+
+        .card {
+            padding: 1.05rem 1.05rem 1rem;
+        }
+
+        .card__title {
+            font-size: 1.16rem;
+        }
+
+        .card__description {
+            font-size: 0.88rem;
+        }
+
+        .card__span {
+            font-size: 0.57rem;
+            padding-inline: 0.32rem;
+        }
+
+        .experience__title {
+            font-size: 2.35rem;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .card,
+        .card__repo {
+            transition: none;
+        }
+
+        .card:hover {
+            transform: none;
+        }
+    }
+}
+
+/* ------------------------------------------------------------
+   DARK THEME
+   ------------------------------------------------------------ */
+
+@media (prefers-color-scheme: dark) {
+    .experience {
+        --exp-surface: #191b22;
+        --exp-soft-surface: #1e2028;
+        --exp-ink: #f1f3f7;
+        --exp-text: #b6bdc9;
+        --exp-muted: #929bad;
+        --exp-border: #2d303a;
+        --exp-border-strong: #3b3f4b;
+        --exp-school: #facc15;
+        --exp-school-ink: #fcd34d;
+        --exp-on-school: #111827;
+        --exp-projects: #a78bfa;
+        --exp-projects-ink: #c4b5fd;
+        --exp-projects-soft: rgba(167, 139, 250, 0.12);
+        --exp-projects-line: rgba(167, 139, 250, 0.26);
+        --exp-work: #60a5fa;
+        --exp-work-ink: #93c5fd;
+        --exp-work-soft: rgba(96, 165, 250, 0.12);
+        --exp-work-line: rgba(96, 165, 250, 0.28);
+        --exp-dot: rgba(226, 232, 240, 0.11);
+        --exp-shadow: 0 18px 45px -30px rgba(0, 0, 0, 0.8);
+        --exp-shadow-hover: 0 24px 52px -30px rgba(0, 0, 0, 0.9);
+    }
+}
