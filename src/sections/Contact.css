@@ -156,15 +156,13 @@
     resize: vertical;
 }
 
-/* Keep the honeypot out of layout and out of the accessibility tree. */
+/*
+ * Keep the honeypot out of layout and out of the accessibility tree.
+ * display: none plus readOnly also keeps browser autofill out of it, which
+ * otherwise can produce a false "Message sent" without contacting Formspree.
+ */
 .contact__honeypot {
-    position: absolute;
-    top: 0;
-    left: -9999px;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    pointer-events: none;
+    display: none;
 }
 
 .contact__turnstile {

@@ -386,6 +386,7 @@ function ContactForm({ autoFocusName = false, onSuccess }: ContactFormProps) {
                     name="_gotcha"
                     tabIndex={-1}
                     autoComplete="off"
+                    readOnly
                 />
             </div>
 
