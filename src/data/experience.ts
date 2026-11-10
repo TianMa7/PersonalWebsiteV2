@@ -8,12 +8,18 @@
  * - `endTerm` is where it merges back into the timeline. Omit `endTerm` while
  *   an entry is ongoing; its rail fades out at the current end of the graph.
  * - Both terms must be one of TERMS. `endTerm` must be later than `startTerm`.
- * - Cards are automatically centered on the midpoint of their branch.
- * - Keep at most one active project branch and one active work branch at a
- *   time. Branch intervals on the same side must not overlap.
+ * - Cards are automatically centered on the midpoint of their branch, and the
+ *   timeline's term pitch is measured from the tallest card so larger cards get
+ *   more room.
+ * - Branches on the same side may meet at a term: one can end where the next
+ *   starts, and the graph renders the merge and split at that node. Branches
+ *   that overlap by a full term share one rail; stagger their terms if their
+ *   cards need separate space.
  * - `id` must be unique; use letters, numbers, and dashes only.
  * - Descriptions are not truncated. Aim for one to three sentences.
- * - Images are optional. Import a file near the top of this file, then add:
+ * - Images are optional and render uncropped inside a 4:3 frame, so portrait,
+ *   landscape, square, and panoramic images all fit. Import a file near the top
+ *   of this file, then add:
  *       images: [{ src: projectScreenshot, alt: 'Screenshot description' }]
  * - `repoUrl` is optional and only appears on project cards.
  *

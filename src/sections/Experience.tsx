@@ -10,7 +10,6 @@ import type { ProjectEntry, Term, WorkEntry } from '../data/experience.ts';
 import './Experience.css';
 
 type Side = 'projects' | 'work';
-type RailState = 'start' | 'through' | 'end';
 
 interface Branch {
     entry: ProjectEntry | WorkEntry;
@@ -19,6 +18,19 @@ interface Branch {
     endIndex: number;
     ongoing: boolean;
     slotIndex: number;
+}
+
+interface RailInfo {
+    /** A branch on this side covers the term. */
+    covers: boolean;
+    /** A branch on this side starts at the term. */
+    starts: boolean;
+    /** A completed branch on this side ends at the term. */
+    ends: boolean;
+    /** A branch started above the term and continues below it. */
+    hasThrough: boolean;
+    /** An ongoing branch covers the term. */
+    ongoing: boolean;
 }
 
 interface TermRow {
@@ -30,10 +42,8 @@ interface TermRow {
     isCurrent: boolean;
     projects: ProjectEntry[];
     work: WorkEntry[];
-    projectBranch: Branch | null;
-    workBranch: Branch | null;
-    projectState: RailState | null;
-    workState: RailState | null;
+    projectRail: RailInfo;
+    workRail: RailInfo;
     hasEnd: boolean;
 }
 
@@ -42,6 +52,9 @@ const LAST_TERM = TERMS[LAST_TERM_INDEX];
 const TERM_INDEX = new Map<Term, number>(
     TERMS.map((term, index) => [term, index]),
 );
+const COMPACT_MEDIA_QUERY = '(max-width: 900px)';
+const MIN_TERM_PITCH = 560;
+const CARD_CLEARANCE = 96;
 
 const SEASON_LABELS = {
     F: 'Fall',
@@ -93,9 +106,9 @@ if (import.meta.env.DEV) {
         for (let index = 1; index < sorted.length; index += 1) {
             const previous = sorted[index - 1];
             const current = sorted[index];
-            if (current.startIndex <= previous.endIndex) {
+            if (current.startIndex < previous.endIndex) {
                 console.warn(
-                    `[Experience] ${label} branches "${previous.entry.id}" and "${current.entry.id}" overlap. Keep one active branch per side.`,
+                    `[Experience] ${label} branches "${previous.entry.id}" and "${current.entry.id}" overlap by more than a shared boundary term. They share one rail and their cards may collide.`,
                 );
             }
         }
@@ -129,32 +142,55 @@ for (const branch of workBranches) {
     pushToMap(workTermCards, branch.slotIndex, branch.entry as WorkEntry);
 }
 
-function stateForTerm(branch: Branch, index: number): RailState {
-    if (index === branch.startIndex) {
-        return 'start';
-    }
-    if (!branch.ongoing && index === branch.endIndex) {
-        return 'end';
-    }
-    return 'through';
+if (import.meta.env.DEV) {
+    const warnAboutStackedCards = (
+        cards: ReadonlyMap<number, readonly unknown[]>,
+        label: string,
+    ) => {
+        for (const [index, entries] of cards) {
+            if (entries.length > 1) {
+                console.warn(
+                    `[Experience] ${entries.length} ${label} entries share ${TERMS[index]}. Their cards stack in one cell; stagger their terms if they need separate space.`,
+                );
+            }
+        }
+    };
+
+    warnAboutStackedCards(projectTermCards, 'project');
+    warnAboutStackedCards(workTermCards, 'work');
+}
+
+function railInfo(branches: Branch[], index: number): RailInfo {
+    const covering = branches.filter(
+        (branch) => index >= branch.startIndex && index <= branch.endIndex,
+    );
+
+    return {
+        covers: covering.length > 0,
+        starts: covering.some((branch) => branch.startIndex === index),
+        // A one-term completed branch cannot merge back in the same row; it is
+        // left as a start-only stub and flagged by the dev warning above.
+        ends: covering.some(
+            (branch) =>
+                !branch.ongoing &&
+                branch.endIndex === index &&
+                branch.startIndex < branch.endIndex,
+        ),
+        hasThrough: covering.some(
+            (branch) =>
+                branch.startIndex < index &&
+                (branch.ongoing || branch.endIndex > index),
+        ),
+        ongoing: covering.some((branch) => branch.ongoing),
+    };
 }
 
 const rows: TermRow[] = [];
 
 for (let index = 0; index < TERMS.length; index += 1) {
     const term = TERMS[index];
-    const projectBranch =
-        projectBranches.find(
-            (branch) => index >= branch.startIndex && index <= branch.endIndex,
-        ) ?? null;
-    const workBranch =
-        workBranches.find(
-            (branch) => index >= branch.startIndex && index <= branch.endIndex,
-        ) ?? null;
-    const projectState = projectBranch
-        ? stateForTerm(projectBranch, index)
-        : null;
-    const workState = workBranch ? stateForTerm(workBranch, index) : null;
+    const projectRail = railInfo(projectBranches, index);
+    const workRail = railInfo(workBranches, index);
 
     rows.push({
         key: `term-${term}`,
@@ -165,11 +201,9 @@ for (let index = 0; index < TERMS.length; index += 1) {
         isCurrent: term === CURRENT_TERM,
         projects: projectTermCards.get(index) ?? [],
         work: workTermCards.get(index) ?? [],
-        projectBranch,
-        workBranch,
-        projectState,
-        workState,
-        hasEnd: projectState === 'end' || workState === 'end',
+        projectRail,
+        workRail,
+        hasEnd: projectRail.ends || workRail.ends,
     });
 }
 
@@ -241,16 +275,16 @@ function BranchArm({ side, type }: { side: Side; type: 'start' | 'end' }) {
     );
 }
 
-function BranchRail({
+function RailLine({
     side,
     state,
-    ongoing,
-    shifted,
+    shifted = false,
+    fade = false,
 }: {
     side: Side;
-    state: RailState;
-    ongoing: boolean;
-    shifted: boolean;
+    state: 'start' | 'through' | 'end';
+    shifted?: boolean;
+    fade?: boolean;
 }) {
     const classes = [
         'rail',
@@ -258,11 +292,11 @@ function BranchRail({
         `rail--${state}`,
     ];
 
-    if (ongoing) {
-        classes.push('rail--ongoing');
-    }
-    if (shifted) {
+    if (state === 'start' && shifted) {
         classes.push('rail--start-shifted');
+    }
+    if (fade) {
+        classes.push('rail--ongoing');
     }
 
     return (
@@ -271,6 +305,41 @@ function BranchRail({
                 <BranchArm side={side} type={state} />
             ) : null}
         </div>
+    );
+}
+
+function BranchRail({
+    side,
+    info,
+    shifted,
+    fade,
+}: {
+    side: Side;
+    info: RailInfo;
+    shifted: boolean;
+    fade: boolean;
+}) {
+    if (!info.covers) {
+        return null;
+    }
+
+    return (
+        <>
+            {info.hasThrough ? (
+                <RailLine side={side} state="through" fade={fade} />
+            ) : null}
+            {info.ends ? (
+                <RailLine side={side} state="end" fade={fade} />
+            ) : null}
+            {info.starts ? (
+                <RailLine
+                    side={side}
+                    state="start"
+                    shifted={shifted}
+                    fade={fade}
+                />
+            ) : null}
+        </>
     );
 }
 
@@ -286,13 +355,15 @@ function ImageStrip({ entry }: { entry: ProjectEntry | WorkEntry }) {
             }`}
         >
             {entry.images.map((image, index) => (
-                <img
-                    className="card__image"
-                    key={`${entry.id}-${index}`}
-                    src={image.src}
-                    alt={image.alt}
-                    loading="lazy"
-                />
+                <div className="card__thumb" key={`${entry.id}-${index}`}>
+                    <img
+                        className="card__image"
+                        src={image.src}
+                        alt={image.alt}
+                        loading="lazy"
+                        decoding="async"
+                    />
+                </div>
             ))}
         </div>
     );
@@ -387,6 +458,8 @@ function Experience() {
     const graphRef = useRef<HTMLDivElement>(null);
     const [shifts, setShifts] = useState<Record<string, number>>({});
     const shiftsRef = useRef<Record<string, number>>({});
+    const [rowHeight, setRowHeight] = useState<number | null>(null);
+    const rowHeightRef = useRef(0);
 
     const measure = useCallback(() => {
         const graph = graphRef.current;
@@ -394,7 +467,7 @@ function Experience() {
             return;
         }
 
-        const isCompact = window.matchMedia('(max-width: 900px)').matches;
+        const isCompact = window.matchMedia(COMPACT_MEDIA_QUERY).matches;
         if (isCompact) {
             if (Object.keys(shiftsRef.current).length > 0) {
                 shiftsRef.current = {};
@@ -420,6 +493,21 @@ function Experience() {
                     entryElements.set(element.dataset.entryId, element);
                 }
             });
+
+        // The term pitch has to clear the tallest card, otherwise the midpoint
+        // alignment lets one card overlap the next one on the same side.
+        let tallestEntry = 0;
+        for (const element of entryElements.values()) {
+            tallestEntry = Math.max(tallestEntry, element.offsetHeight);
+        }
+        const nextRowHeight = Math.max(
+            MIN_TERM_PITCH,
+            Math.ceil(tallestEntry + CARD_CLEARANCE),
+        );
+        if (nextRowHeight !== rowHeightRef.current) {
+            rowHeightRef.current = nextRowHeight;
+            setRowHeight(nextRowHeight);
+        }
 
         let lastRowBottom: number | null = null;
         graph
@@ -557,7 +645,17 @@ function Experience() {
                 </ul>
             </div>
 
-            <div className="experience__graph" ref={graphRef}>
+            <div
+                className="experience__graph"
+                ref={graphRef}
+                style={
+                    rowHeight === null
+                        ? undefined
+                        : ({
+                              '--exp-row-h': `${rowHeight}px`,
+                          } as CSSProperties)
+                }
+            >
                 <ol
                     className="experience__timeline"
                     aria-label="School terms with project and work branches"
@@ -650,33 +748,23 @@ function Experience() {
                                     </div>
                                 ) : null}
 
-                                {row.projectBranch && row.projectState ? (
+                                {row.projectRail.covers ? (
                                     <BranchRail
                                         side="projects"
-                                        state={row.projectState}
-                                        ongoing={
-                                            row.projectBranch.ongoing &&
-                                            row.isLast
-                                        }
-                                        shifted={
-                                            row.projectState === 'start' &&
-                                            row.hasEnd
+                                        info={row.projectRail}
+                                        shifted={row.hasEnd}
+                                        fade={
+                                            row.isLast && row.projectRail.ongoing
                                         }
                                     />
                                 ) : null}
 
-                                {row.workBranch && row.workState ? (
+                                {row.workRail.covers ? (
                                     <BranchRail
                                         side="work"
-                                        state={row.workState}
-                                        ongoing={
-                                            row.workBranch.ongoing &&
-                                            row.isLast
-                                        }
-                                        shifted={
-                                            row.workState === 'start' &&
-                                            row.hasEnd
-                                        }
+                                        info={row.workRail}
+                                        shifted={row.hasEnd}
+                                        fade={row.isLast && row.workRail.ongoing}
                                     />
                                 ) : null}
                             </li>

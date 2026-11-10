@@ -36,7 +36,10 @@
     --exp-branch-node: 20px;
     --exp-node-top: 24px;
     --exp-node-center: calc(var(--exp-node-top) + var(--exp-main-node) / 2);
-    --exp-row-h: 420px;
+    /* Fallback until Experience.tsx measures the tallest card. The inline
+       value keeps the node pitch large enough that cards never collide. */
+    --exp-row-h: 560px;
+    --exp-media-max-h: 320px;
     --exp-arm-run: calc(
         var(--exp-lane) * 3 + var(--exp-axis) / 2 + var(--exp-rail) / 2
     );
@@ -633,8 +636,8 @@
 
     .card__media {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.55rem;
         margin-top: 1rem;
     }
 
@@ -642,14 +645,33 @@
         grid-template-columns: 1fr;
     }
 
-    .card__image {
-        display: block;
+    /*
+     * A fixed-ratio window keeps cards predictable while `contain` shows the
+     * whole image: portrait, landscape, square, and panoramic images all fit
+     * without cropping or distortion. The soft backing fills the letterbox.
+     */
+    .card__thumb {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 0;
         width: 100%;
-        aspect-ratio: 16 / 9;
-        object-fit: cover;
+        aspect-ratio: 4 / 3;
+        max-height: var(--exp-media-max-h);
+        overflow: hidden;
         border: 1px solid var(--exp-border);
         border-radius: 10px;
         background: var(--exp-soft-surface);
+    }
+
+    .card__image {
+        display: block;
+        flex: none;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
     }
 
     .card__repo {
@@ -700,6 +722,7 @@
         --exp-main-node: 26px;
         --exp-branch-node: 18px;
         --exp-node-top: 1.25rem;
+        --exp-media-max-h: 280px;
 
         padding-block: 2rem 2.5rem;
 
