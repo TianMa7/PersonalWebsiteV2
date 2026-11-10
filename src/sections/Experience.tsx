@@ -442,6 +442,7 @@ function WorkCard({ entry, shift }: { entry: WorkEntry; shift: number }) {
                     {entry.position}
                 </h3>
                 <p className="card__company">{entry.company}</p>
+                <p className="card__focus">{entry.focus}</p>
                 <p className="card__meta">
                     <PinIcon />
                     {entry.location}

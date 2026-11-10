@@ -56,6 +56,7 @@ export interface WorkEntry {
     position: string;
     company: string;
     location: string;
+    focus: string;
     description: string;
     images?: ExperienceImage[];
 }
@@ -98,6 +99,7 @@ export const WORK: WorkEntry[] = [
         position: 'Mechanical Design',
         company: 'TK Modular',
         location: 'Oakville, ON',
+        focus: 'Mech Design · Drafting',
         description:
             'Designed, drafted, and helped build biopharmaceutical process superskids to make the world a healthier place.',
     },
@@ -108,6 +110,7 @@ export const WORK: WorkEntry[] = [
         position: 'Composite R&D',
         company: 'UW Formula Electic',
         location: 'Waterloo, ON',
+        focus: 'Mould Design · Composite Manufacturing',
         description:
             'Less weight. Less cost. More speed. Rethinking carbon-fibre airfoils through lightweight, coreless construction.'
     },
@@ -117,6 +120,7 @@ export const WORK: WorkEntry[] = [
         position: 'Product R&D',
         company: 'QQuote',
         location: 'Toronto, ON',
+        focus: 'Computer Vision · Hardware · Integration',
         description:
             'Catching what eyes can miss. Building a tire health scanner that detects hidden wear before it puts drivers at risk.',
     },
