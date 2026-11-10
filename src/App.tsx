@@ -1,6 +1,7 @@
 import Header from './sections/Header.tsx'
 import Hero from './sections/Hero.tsx'
 import Experience from './sections/Experience.tsx'
+import Contact from './sections/Contact.tsx'
 import './App.css'
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
       <Header />
         <Hero />
         <Experience />
+        <Contact />
     </div>
   )
   // const [count, setCount] = useState(0)
