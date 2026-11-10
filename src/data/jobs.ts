@@ -12,20 +12,20 @@ import walleLogo from '../assets/wall-e.jpg';
  */
 export const RADAR_LABELS = [
     'Computer Vision',
-    'Embedded',
-    'Mechanical',
     'Software',
+    'Embedded',
     'Electronics',
+    'Mechanical',
     'Prototyping',
 ] as const;
 
 /** Full names for the shortened axis labels, used as accessible text. */
 export const RADAR_LABEL_TITLES = [
     'Computer Vision',
-    'Embedded Systems',
-    'Mechanical Design',
     'Software Development',
+    'Embedded Systems',
     'Electronics',
+    'Mechanical Design',
     'Manufacturing & Prototyping',
 ] as const;
 
@@ -56,7 +56,7 @@ export const jobs: Job[] = [
         title: 'Product R&D',
         logo: qquoteLogo,
         color: '#f7a94f',
-        values: [7, 5, 6, 4, 8, 6],
+        values: [8, 4, 4, 3, 5, 8],
     },
     {
         id: 'tkms',
@@ -65,7 +65,7 @@ export const jobs: Job[] = [
         title: 'Mechanical Design',
         logo: tkmsLogo,
         color: '#4f8ef7',
-        values: [5, 8, 7, 6, 5, 7],
+        values: [0, 0, 0, 0, 9, 5],
     },
     {
         id: 'uwfe',
@@ -74,7 +74,7 @@ export const jobs: Job[] = [
         title: 'Composite R&D',
         logo: uwfeLogo,
         color: '#3ecf8e',
-        values: [9, 6, 5, 7, 8, 6],
+        values: [0, 0, 0, 0, 8, 7],
     },
     {
         id: 'proj',
@@ -83,6 +83,6 @@ export const jobs: Job[] = [
         title: 'Make. Break. Learn.',
         logo: walleLogo,
         color: '#7c3aed',
-        values: [8, 9, 6, 5, 7, 8],
+        values: [3, 8, 8, 4, 8, 6],
     },
 ];
