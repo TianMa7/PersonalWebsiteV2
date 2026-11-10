@@ -27,11 +27,6 @@
     gap: 1rem;
 }
 
-.hero__description,
-.hero__stats {
-    min-width: 0;
-}
-
 .hero__images {
     display: flex;
     flex-direction: column;
@@ -70,6 +65,199 @@
     object-fit: contain;
 }
 
+/* ------------------------------------------------------------
+   PROFILE DESCRIPTION
+   Left-aligned, card-like type hierarchy that mirrors the
+   Experience section: mono eyebrow, display line, supporting
+   copy, then the availability and action chips.
+   ------------------------------------------------------------ */
+
+.hero__description,
+.hero__stats {
+    min-width: 0;
+}
+
+.hero__description {
+    max-width: 34rem;
+    text-align: left;
+}
+
+.hero__heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.62rem;
+
+    margin: 0;
+
+    color: var(--text-h);
+    font-family: var(--sans);
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: normal;
+}
+
+.hero__name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.hero__name::before {
+    content: '';
+
+    width: 1.75rem;
+    height: 2px;
+
+    border-radius: 999px;
+    background: var(--accent);
+}
+
+.hero__headline {
+    color: var(--text-h);
+    font-size: clamp(2.05rem, 2.8vw, 2.55rem);
+    font-weight: 600;
+    line-height: 1.03;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+}
+
+.hero__credential {
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+
+    margin: 0.95rem 0 0;
+
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    line-height: 1.55;
+    letter-spacing: 0.015em;
+}
+
+.hero__credential-part {
+    white-space: nowrap;
+}
+
+.hero__lede {
+    margin: 1.2rem 0 0;
+
+    color: var(--text);
+    font-size: 0.96rem;
+    line-height: 1.62;
+    text-wrap: pretty;
+}
+
+.hero__lede-line {
+    display: block;
+}
+
+.hero__lede-turn {
+    display: block;
+
+    margin-top: 0.4rem;
+
+    color: var(--text-h);
+    font-weight: 500;
+}
+
+.hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem;
+
+    margin-top: 1.55rem;
+}
+
+.hero__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    padding: 0.44rem 0.62rem;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg);
+    color: var(--text);
+
+    font-family: var(--mono);
+    font-size: 0.59rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.hero__status-dot {
+    flex: none;
+
+    width: 0.42rem;
+    height: 0.42rem;
+
+    border-radius: 50%;
+    background: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.14);
+}
+
+.hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+
+    padding: 0.6rem 0.85rem;
+
+    border: 1px solid var(--accent-border);
+    border-radius: 9px;
+    background: var(--accent-bg);
+    color: var(--accent);
+
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+
+    transition:
+        transform 160ms ease,
+        border-color 160ms ease,
+        box-shadow 160ms ease;
+}
+
+.hero__cta svg {
+    width: 0.85rem;
+    height: 0.85rem;
+
+    transition: transform 160ms ease;
+}
+
+.hero__cta:hover {
+    border-color: var(--accent);
+    box-shadow: 0 10px 20px -14px var(--accent-border);
+    transform: translateY(-1px);
+}
+
+.hero__cta:hover svg {
+    transform: translateY(2px);
+}
+
+.hero__cta:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
 /*
  * The chart sits in the narrow right column on desktop. Below 900px that
  * column is too narrow for the chart's fixed legend, so give the chart its
@@ -92,5 +280,76 @@
 
     .hero__stats {
         grid-column: 1 / -1;
+    }
+}
+
+/*
+ * Below 560px the description column is too narrow for the profile block,
+ * so the portrait and logo share a compact row and the copy gets the full
+ * width underneath it.
+ */
+@media (max-width: 560px) {
+    .hero__content {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem;
+    }
+
+    .hero__images {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: end;
+        gap: 1rem;
+
+        grid-column: 1;
+        width: 100%;
+        max-width: 22rem;
+        margin-inline: auto;
+    }
+
+    .hero__headshot {
+        width: 100%;
+        max-width: none;
+        margin-inline: 0;
+    }
+
+    .hero__logo {
+        margin-inline: 0;
+    }
+
+    .hero__description {
+        grid-column: 1;
+        max-width: none;
+    }
+
+    .hero__headline {
+        font-size: clamp(2.2rem, 9vw, 2.7rem);
+    }
+
+    .hero__status {
+        font-size: 0.66rem;
+        letter-spacing: 0.09em;
+    }
+
+    .hero__stats {
+        grid-column: 1;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .hero__status-dot {
+        background: #4ade80;
+        box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.18);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero__cta,
+    .hero__cta svg {
+        transition: none;
+    }
+
+    .hero__cta:hover,
+    .hero__cta:hover svg {
+        transform: none;
     }
 }

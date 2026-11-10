@@ -8,24 +8,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1.25rem;
+    gap: 0.75rem;
     flex-wrap: wrap;
     width: 100%;
 }
 
 /*
  * Chart.js uses the size of this container because
- * maintainAspectRatio is disabled.
+ * maintainAspectRatio is disabled. Let the plot take the space left
+ * over beside the legend, capped so the radar does not get oversized.
  */
 .radar-chart__canvas {
     position: relative;
+    flex: 1 1 300px;
     width: 100%;
-    max-width: 300px;
+    /* Chart.js writes the canvas width inline, so allow the flex item to shrink again. */
+    min-width: 0;
+    max-width: 340px;
     height: 320px;
 }
 
 @media (max-width: 650px) {
     .radar-chart__canvas {
+        flex: none;
         max-width: 330px;
         height: 300px;
     }
