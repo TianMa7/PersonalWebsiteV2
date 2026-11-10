@@ -234,6 +234,16 @@
         z-index: 4;
         grid-row: 1;
         min-width: 0;
+        /*
+         * The cell is centered in the row and can be taller than the card it
+         * holds. Letting empty cell padding capture the pointer would block
+         * hover and clicks on a card that extends into the next row.
+         */
+        pointer-events: none;
+    }
+
+    .cards .entry {
+        pointer-events: auto;
     }
 
     .cards--projects {
