@@ -14,7 +14,7 @@ export const RADAR_LABELS = [
     'Computer Vision',
     'Software',
     'Embedded',
-    'Electronics',
+    'Electrical',
     'Mechanical',
     'Prototyping',
 ] as const;
@@ -24,7 +24,7 @@ export const RADAR_LABEL_TITLES = [
     'Computer Vision',
     'Software Development',
     'Embedded Systems',
-    'Electronics',
+    'Electrical',
     'Mechanical Design',
     'Manufacturing & Prototyping',
 ] as const;
