@@ -136,6 +136,43 @@
     }
 }
 
+/*
+ * On narrow phones the three nav links plus the social icons cannot share
+ * one row with the "Socials" caption. Keep the caption accessible but hide
+ * it visually, and tighten the two groups so 320px-wide screens still fit.
+ */
+@media (max-width: 400px) {
+    .header__socials-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .header__nav ul {
+        gap: 0.8rem;
+    }
+
+    .header__socials {
+        gap: 0.4rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .header__inner {
+        gap: 0.5rem;
+    }
+
+    .header__nav ul {
+        gap: 0.65rem;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .header__nav a,
     .header__social-link {

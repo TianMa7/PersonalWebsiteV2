@@ -37,6 +37,9 @@ function Header() {
                         <li>
                             <a href="#experience">Experience</a>
                         </li>
+                        <li>
+                            <a href="#contact">Contact</a>
+                        </li>
                     </ul>
                 </nav>
 
