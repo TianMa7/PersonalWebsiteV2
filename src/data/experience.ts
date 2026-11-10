@@ -54,7 +54,8 @@ export interface WorkEntry {
     images?: ExperienceImage[];
 }
 
-// import lumenEditor from '../assets/experience/lumen-editor.png';
+import cardDealer from '../assets/cardDealer.png';
+import groupPlane from '../assets/groupPlane.jpeg';
 
 export const PROJECTS: ProjectEntry[] = [
     {
@@ -66,38 +67,51 @@ export const PROJECTS: ProjectEntry[] = [
         focus: 'Robotics · C++ · Path-Planning',
         description:
             'Faster than humans. Cooler than the competition. A VEX-based autonomous card dealer built for the biggest parties.',
-        // images: [{ src: lumenEditor, alt: 'Lumen lighting editor' }],
-        repoUrl: 'https://github.com/',
+        images: [{ src: cardDealer, alt: 'Card Dealer' }],
+        repoUrl: 'https://github.com/TianMa7/CardDealingRobot',
     },
     {
-        id: 'tempo',
-        startTerm: 'F26',
-        name: 'Tempo',
-        location: 'Toronto, ON',
-        focus: 'FastAPI · Postgres · scheduling',
+        id: 'plane',
+        startTerm: 'W26',
+        endTerm: 'S26',
+        name: 'RC Plane',
+        location: 'Oakville, ON',
+        focus: 'RTOS · Control Algorithms · Mech Design',
         description:
-            'An API that turns shared calendars into focused practice blocks for a 40-person club. Ships with a small admin view for managing availability.',
+            'Questionable takeoff. Impeccable learning. A custom-built RC plane that proved engineering success is not always measured in altitude.',
+        images: [{ src: groupPlane, alt: 'Team with Plane'}],
+        repoUrl: 'https://github.com/TianMa7/RC_PLANE'
     },
 ];
 
 export const WORK: WorkEntry[] = [
     {
-        id: 'acme-labs',
+        id: 'tkms',
         startTerm: 'W26',
         endTerm: 'S26',
-        position: 'Software Engineering Intern',
-        company: 'Acme Labs',
-        location: 'Toronto, ON',
+        position: 'Mechanical Design',
+        company: 'TK Modular',
+        location: 'Oakville, ON',
         description:
-            'Worked on the event ingestion pipeline and cut backfill time by 38%. Shipped a dashboard that lets on-call engineers replay failed jobs.',
+            'Designed, drafted, and helped build biopharmaceutical process superskids to make the world a healthier place.',
     },
     {
-        id: 'uw-research',
-        startTerm: 'F26',
-        position: 'Undergraduate Research Assistant',
-        company: 'University of Waterloo',
+        id: 'uwfe',
+        startTerm: 'S26',
+        endTerm: 'F26',
+        position: 'Composite R&D',
+        company: 'UW Formula Electic',
         location: 'Waterloo, ON',
         description:
-            'Exploring efficient attention kernels for edge devices. Built the benchmarking harness used for weekly model comparisons.',
+            'Less weight. Less cost. More speed. Rethinking carbon-fibre airfoils through lightweight, coreless construction.'
+    },
+    {
+        id: 'qquote',
+        startTerm: 'F26',
+        position: 'Product R&D',
+        company: 'QQuote',
+        location: 'Toronto, ON',
+        description:
+            'Catching what eyes can miss. Building a tire health scanner that detects hidden wear before it puts drivers at risk.',
     },
 ];

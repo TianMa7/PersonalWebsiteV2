@@ -10,7 +10,7 @@ import {
 } from 'chart.js';
 import type { ChartData, ChartOptions } from "chart.js";
 import { Radar } from 'react-chartjs-2';
-import { jobs, RADAR_LABELS } from '../data/jobs';
+import { jobs, RADAR_LABELS, RADAR_LABEL_TITLES } from '../data/jobs';
 import RadarLegend from './RadarLegend';
 import './RadarChart.css';
 
@@ -60,6 +60,11 @@ function RadarChart() {
             responsive: true,
             maintainAspectRatio: false,
 
+            /** Leave a little breathing room so point labels never touch the canvas edge. */
+            layout: {
+                padding: 6,
+            },
+
             scales: {
                 r: {
                     min: 0,
@@ -78,8 +83,9 @@ function RadarChart() {
                     },
                     pointLabels: {
                         color: pointLabelColor,
+                        padding: 6,
                         font: {
-                            size: 13,
+                            size: 12,
                             weight: 600,
                         },
                     },
@@ -127,10 +133,18 @@ function RadarChart() {
 
     const handleHover = (id: string | null) => setHoveredId(id);
 
+    const chartDescription = `Radar chart comparing ${jobs
+        .map((job) => job.company)
+        .join(', ')} across ${RADAR_LABEL_TITLES.join(', ')}.`;
+
     return (
         <figure className="radar-chart">
             <div className="radar-chart__body">
-                <div className="radar-chart__canvas">
+                <div
+                    className="radar-chart__canvas"
+                    role="img"
+                    aria-label={chartDescription}
+                >
                     <Radar data={data} options={options} />
                 </div>
                 <RadarLegend

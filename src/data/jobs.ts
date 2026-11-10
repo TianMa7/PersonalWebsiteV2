@@ -3,14 +3,30 @@ import tkmsLogo from '../assets/tkms.jpg';
 import uwfeLogo from '../assets/uwfe.jpg';
 import walleLogo from '../assets/wall-e.jpg';
 
-/** Stat axes rendered by the radar chart. */
+/**
+ * Stat axes rendered by the radar chart.
+ *
+ * Chart.js draws these labels inside the canvas, so they have to stay short
+ * enough to fit beside the plot. Keep the full discipline names in
+ * `RADAR_LABEL_TITLES` for the accessible description.
+ */
 export const RADAR_LABELS = [
-    'Coding',
-    'Design',
-    'Leadership',
-    'Communication',
-    'Analysis',
-    'Impact',
+    'Computer Vision',
+    'Embedded',
+    'Mechanical',
+    'Software',
+    'Electronics',
+    'Prototyping',
+] as const;
+
+/** Full names for the shortened axis labels, used as accessible text. */
+export const RADAR_LABEL_TITLES = [
+    'Computer Vision',
+    'Embedded Systems',
+    'Mechanical Design',
+    'Software Development',
+    'Electronics',
+    'Manufacturing & Prototyping',
 ] as const;
 
 export interface Job {
