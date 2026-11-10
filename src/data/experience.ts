@@ -60,7 +60,7 @@ export interface WorkEntry {
     images?: ExperienceImage[];
 }
 
-import cardDealer from '../assets/cardDealer.png';
+import cardDealer from '../assets/CardDealer.png';
 import groupPlane from '../assets/groupPlane.jpeg';
 
 export const PROJECTS: ProjectEntry[] = [
