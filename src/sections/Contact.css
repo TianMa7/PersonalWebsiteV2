@@ -20,8 +20,7 @@
 
     width: min(100% - 2rem, 1120px);
     margin-inline: auto;
-    padding-block: 3.5rem 5rem;
-    border-top: 1px solid var(--border);
+    padding-block: 2.5rem 5rem;
     color: var(--contact-muted);
     font-family: var(--sans);
     text-align: left;
@@ -49,7 +48,7 @@
     margin: 0 0 0.7rem;
     color: var(--accent);
     font-family: var(--mono);
-    font-size: 0.68rem;
+    font-size: 1.36rem;
     font-weight: 600;
     line-height: 1;
     letter-spacing: 0.14em;
@@ -335,7 +334,7 @@
 
 @media (max-width: 480px) {
     .contact {
-        padding-block: 3rem 4rem;
+        padding-block: 2.5rem 4rem;
     }
 
     .contact__panel {

@@ -49,7 +49,9 @@
 
     width: min(100% - 2rem, 1120px);
     margin-inline: auto;
-    padding-block: 2.5rem 4rem;
+    /* Bottom padding pairs with the next section's 2.5rem top padding so
+       every seam on the page is the same 4.5rem. */
+    padding-block: 2.5rem 2rem;
     color: var(--exp-text);
     font-family: var(--sans);
     text-align: left;
@@ -734,7 +736,7 @@
         --exp-node-top: 1.25rem;
         --exp-media-max-h: 280px;
 
-        padding-block: 2rem 2.5rem;
+        padding-block: 2.5rem 2rem;
 
         .experience__graph {
             margin-top: 2.75rem;
